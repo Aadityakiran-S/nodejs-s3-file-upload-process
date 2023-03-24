@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const router = require('./routes/router.js');
-require('dotenv').config();
 
 //using inbuilt middlewares
 app.use(express.json());
