@@ -25,7 +25,7 @@ const processImageToThumbnail = async (buffer) => {
                 .toFormat("jpeg", { mozjpeg: true })
                 .jpeg({ quality: outputQuality })
                 .toBuffer();
-            outputQuality -= 10;
+            outputQuality -= 10; /*#TOASK: Maybe rather than doing this, I can try to quality *= (0.9) or something till it eventually decreases in quality?*/
         }
 
         if (thumbnailImage.length > 30000) {
