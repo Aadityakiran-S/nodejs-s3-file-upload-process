@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const fs = require('fs');
 s3 = new AWS.S3();
 
 const { createBucketIfNotExists } = require('../helpers/s3-bucket-initialization-helper.js');
