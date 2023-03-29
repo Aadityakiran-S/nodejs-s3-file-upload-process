@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+// TODO: Check out what exactly this number is in fileSize 
 const imageUpload = multer({ dest: './uploads/', limits: { fileSize: 1282810 } }).single('imageBinary')
 // #TOASK: So like this ./uploads folder will keep increasing, how do we prevent that?
 
