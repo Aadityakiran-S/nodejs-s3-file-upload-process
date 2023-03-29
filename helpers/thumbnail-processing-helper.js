@@ -28,25 +28,9 @@ const processImageToThumbnail = async (buffer) => {
             outputQuality -= 10;
         }
 
-        if (thumbnailImage.length > 30000) {
-            console.log("Image still too big");
-            outputObj.message = `Image is too big to convert to thumbnail within specified size`;
-
-            return outputObj;
-        }
-
-        outputObj.success = true;
-        outputObj.message = `Image successfully converted to thumbnail of appropriate size`;
-        outputObj.content = thumbnailImage;
-
-        return outputObj;
+        return thumbnailImage;
     } catch (error) {
         console.log(error);
-
-        outputObj.success = false;
-        outputObj.message = error;
-
-        return outputObj;
     }
 }
 

@@ -35,15 +35,12 @@ const uploadToS3AndProcessThumbnail = async (req, res) => {
         console.log("Hello 2");
 
         let thumbnailBuffer = await processImageToThumbnail(imageBinary);
-        if (thumbnailBuffer.success === false) {
-            return res.status(500).json({ msg: `Thumbnail size is too big` });
-        }
 
         // Set the parameters for uploading image
         bucketParams = {
             Bucket: bucketName,
             Key: `${fileKey.split('.')[0]}_thumbnail.jpeg`,
-            Body: thumbnailBuffer.content,
+            Body: thumbnailBuffer,
             ContentType: 'image/jpeg'
         };
 
