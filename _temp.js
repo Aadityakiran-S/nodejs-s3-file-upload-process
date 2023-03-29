@@ -7,7 +7,6 @@ s3 = new AWS.S3();
 // Create the parameters for calling createBucket
 var bktName = `${process.env.PROJECT_NAME}-${process.env.AWS_REGION}`;
 
-// #TOASK: Didn't understand how all this promise stuff works. Could you explain? Could we write this with try catch in an easier to understand way?
 const createBucketIfNotExists = async (bucketName) => {
     try {
         const response = await s3.headBucket({ Bucket: bucketName }).promise();

@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const router = require('./routes/router.js');
+const { createBucketIfNotExists } = require('./helpers/s3-bucket-initialization-helper.js');
 
 //using inbuilt middlewares
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //setting up direction to router
 app.use('/api/v1/process-file', router);
@@ -20,5 +23,15 @@ const start = (portToListen) => {
 };
 
 start(port);
+
+var bucketName = `${process.env.PROJECT_NAME}-${process.env.AWS_REGION}`;
+createBucketIfNotExists(bucketName)
+    .then(() => {
+        console.log(`Bucket ${bucketName} is ready to use`);
+    })
+    .catch(() => {
+        console.error(`Error occured when creating bucket ${bucketName}`);
+    });
+
 
 module.exports = app;

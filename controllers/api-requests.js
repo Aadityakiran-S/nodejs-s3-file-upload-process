@@ -1,36 +1,27 @@
 const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
 const fs = require('fs');
-s3 = new AWS.S3();
 
 const { processImageToThumbnail } = require('../helpers/thumbnail-processing-helper.js');
-const { createBucketIfNotExists } = require('../helpers/s3-bucket-initialization-helper.js');
+
 let bucketParams;
 
 const uploadToS3AndProcessThumbnail = async (req, res) => {
-    let { fileKey, filePath } = req.body;
+    let { fileKey } = req.body;
+    let imageBinary = fs.readFileSync(req.file.path); //#TOASK: This thing is returning undefined. What gives? Also what's object destrucring and why does this have to do 
     try {
-        // Read the file from disk
-        const imageBuffer = fs.readFileSync(filePath);
-
         // Create the parameters for calling createBucket
         var bucketName = `${process.env.PROJECT_NAME}-${process.env.AWS_REGION}`;
-
-        //#TOASK: then() and all that.... I don't really understand promises, could you explain? Or could this just be written in a try catch like we always do?
-        //Create a bucket with the above name if not already exists
-        createBucketIfNotExists(bucketName)
-            .then(() => {
-                console.log(`Bucket '${bucketName}' is ready to use.`);
-            })
-            .catch((error) => {
-                return res.status(500).json({ msg: error.message });
-            });
 
         // Set the parameters for uploading image
         bucketParams = {
             Bucket: bucketName,
             Key: fileKey,
-            Body: imageBuffer
+            Body: imageBinary
         };
+
+        console.log(`FileKey: ${fileKey}, FileBinary ${(JSON.stringify(req.file))}`);
+        console.log(`File path ${(JSON.stringify(req.file.path))}`);
 
         // Upload the file to S3
         s3.upload(bucketParams, (err, data) => {
@@ -41,7 +32,9 @@ const uploadToS3AndProcessThumbnail = async (req, res) => {
             }
         });
 
-        let thumbnailBuffer = await processImageToThumbnail(imageBuffer);
+        console.log("Hello 2");
+
+        let thumbnailBuffer = await processImageToThumbnail(imageBinary);
         if (thumbnailBuffer.success === false) {
             return res.status(500).json({ msg: `Thumbnail size is too big` });
         }
@@ -66,6 +59,7 @@ const uploadToS3AndProcessThumbnail = async (req, res) => {
         return res.status(200).json({ msg: `Image and thumbnail sucessfully processed and uploaded` });
     }
     catch (error) {
+        console.log("Goodbye");
         return res.status(500).json({ msg: error.message });
     }
 }

@@ -6,7 +6,7 @@ let outputObj = { success: false, message: `Yet to be intialized`, content: null
 // Process the image using Sharp
 const processImageToThumbnail = async (buffer) => {
     try {
-        //#TOASK: Is this the correct way to set the aspect ratio of an image? 
+
         //Processing once to change aspect ratio
         let thumbnailImage = await sharp(buffer)
             .resize({
@@ -20,12 +20,12 @@ const processImageToThumbnail = async (buffer) => {
 
         // Reduce the quality setting until the output buffer is below 10KB
         let outputQuality = 90;
-        while (thumbnailImage.length > 30000 /*#TOASK: How to prevent this hardcoding?*/ && outputQuality >= 10) {
+        while (thumbnailImage.length > 30000 /*TODO : Make this a global variable*/ && outputQuality >= 10) {
             thumbnailImage = await sharp(buffer)
                 .toFormat("jpeg", { mozjpeg: true })
                 .jpeg({ quality: outputQuality })
                 .toBuffer();
-            outputQuality -= 10; /*#TOASK: Maybe rather than doing this, I can try to quality *= (0.9) or something till it eventually decreases in quality?*/
+            outputQuality -= 10;
         }
 
         if (thumbnailImage.length > 30000) {
