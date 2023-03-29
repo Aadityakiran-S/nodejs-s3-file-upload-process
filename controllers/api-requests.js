@@ -15,6 +15,7 @@ const uploadToS3AndProcessThumbnail = async (req, res) => {
         // Create the parameters for calling createBucket
         var bucketName = `${process.env.PROJECT_NAME}-${process.env.AWS_REGION}`;
 
+        //#TOASK: then() and all that.... I don't really understand promises, could you explain? Or could this just be written in a try catch like we always do?
         //Create a bucket with the above name if not already exists
         createBucketIfNotExists(bucketName)
             .then(() => {
