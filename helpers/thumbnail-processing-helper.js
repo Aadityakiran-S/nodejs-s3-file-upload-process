@@ -1,5 +1,5 @@
 const sharp = require('sharp');
-const fs = require('fs');
+const maxSize = 30000;
 
 let outputObj = { success: false, message: `Yet to be intialized`, content: null };
 
@@ -20,7 +20,7 @@ const processImageToThumbnail = async (buffer) => {
 
         // Reduce the quality setting until the output buffer is below 10KB
         let outputQuality = 90;
-        while (thumbnailImage.length > 30000 /*TODO : Make this a global variable*/ && outputQuality >= 10) {
+        while (thumbnailImage.length > maxSize && outputQuality >= 10) {
             thumbnailImage = await sharp(buffer)
                 .toFormat("jpeg", { mozjpeg: true })
                 .jpeg({ quality: outputQuality })
